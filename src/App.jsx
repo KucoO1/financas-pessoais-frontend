@@ -172,7 +172,7 @@ const FinanceApp = () => {
             <FiDollarSign className="text-blue-500" />
           </div>
           <p className={`text-xl sm:text-2xl font-bold ${balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-            R$ {balance.toFixed(2)}
+            Kz {balance.toFixed(2)}
           </p>
         </div>
         
@@ -181,7 +181,7 @@ const FinanceApp = () => {
             <h3 className="text-gray-500 text-sm font-medium">Receitas</h3>
             <FiTrendingUp className="text-green-500" />
           </div>
-          <p className="text-xl sm:text-2xl font-bold text-green-600">R$ {income.toFixed(2)}</p>
+          <p className="text-xl sm:text-2xl font-bold text-green-600">Kz {income.toFixed(2)}</p>
         </div>
         
         <div className="bg-white rounded-xl p-4 sm:p-6 shadow-md">
@@ -189,7 +189,7 @@ const FinanceApp = () => {
             <h3 className="text-gray-500 text-sm font-medium">Despesas</h3>
             <FiTrendingDown className="text-red-500" />
           </div>
-          <p className="text-xl sm:text-2xl font-bold text-red-600">R$ {expenses.toFixed(2)}</p>
+          <p className="text-xl sm:text-2xl font-bold text-red-600">Kz {expenses.toFixed(2)}</p>
         </div>
       </div>
 
@@ -211,7 +211,7 @@ const FinanceApp = () => {
                     {getCategoryIcon(category)}
                     <span className="truncate max-w-[100px] sm:max-w-none">{category}</span>
                   </span>
-                  <span className="whitespace-nowrap">R$ {categoryTotal.toFixed(2)} ({percentage.toFixed(1)}%)</span>
+                  <span className="whitespace-nowrap">Kz {categoryTotal.toFixed(2)} ({percentage.toFixed(1)}%)</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div 
@@ -252,7 +252,7 @@ const FinanceApp = () => {
                 </div>
               </div>
               <p className={`font-semibold flex-shrink-0 ml-2 ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
-                {transaction.type === 'income' ? '+' : '-'}R$ {transaction.amount.toFixed(2)}
+                {transaction.type === 'income' ? '+' : '-'}Kz {transaction.amount.toFixed(2)}
               </p>
             </div>
           ))}
@@ -299,7 +299,7 @@ const FinanceApp = () => {
                 </div>
               </div>
               <p className={`font-semibold flex-shrink-0 ml-2 ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
-                {transaction.type === 'income' ? '+' : '-'}R$ {transaction.amount.toFixed(2)}
+                {transaction.type === 'income' ? '+' : '-'}Kz {transaction.amount.toFixed(2)}
               </p>
             </div>
           ))
@@ -342,7 +342,7 @@ const FinanceApp = () => {
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="truncate">R$ {goal.currentAmount.toFixed(2)} de R$ {goal.targetAmount.toFixed(2)}</span>
+                    <span className="truncate">Kz {goal.currentAmount.toFixed(2)} de Kz {goal.targetAmount.toFixed(2)}</span>
                     <span className="flex-shrink-0">{percentage.toFixed(0)}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
@@ -388,7 +388,7 @@ const FinanceApp = () => {
       {/* Overlay para mobile */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          className="fixed inset-0 bg-[ #0000003d] bg-opacity-50 z-40 md:hidden"
           onClick={() => setIsSidebarOpen(false)}
         ></div>
       )}
@@ -468,7 +468,7 @@ const FinanceApp = () => {
 
       {/* Modal para Nova Transação */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-[ #0000003d] bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-4 sm:p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold">Nova Transação</h3>
@@ -522,7 +522,7 @@ const FinanceApp = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Valor (R$)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Valor (Kz)</label>
                 <input
                   type="number"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
@@ -566,7 +566,7 @@ const FinanceApp = () => {
 
       {/* Modal para Nova Meta */}
       {isAddGoalModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-[ #0000003d] bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-4 sm:p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold">Nova Meta Financeira</h3>
@@ -591,7 +591,7 @@ const FinanceApp = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Valor Alvo (R$)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Valor Alvo (Kz)</label>
                 <input
                   type="number"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
@@ -602,7 +602,7 @@ const FinanceApp = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Valor Atual (R$)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Valor Atual (Kz)</label>
                 <input
                   type="number"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
