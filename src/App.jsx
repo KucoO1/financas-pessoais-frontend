@@ -1,26 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  FiArrowUp, 
-  FiArrowDown, 
-  FiDollarSign, 
-  FiPieChart, 
-  FiCalendar,
-  FiPlus,
-  FiFilter,
-  FiTrendingUp,
-  FiTrendingDown,
-  FiCreditCard,
-  FiPocket,
-  FiHome,
-  FiShoppingBag,
-  FiCoffee,
-  FiSettings,
-  FiBell,
-  FiUser,
-  FiBarChart2,
-  FiTarget,
-  FiX,
-  FiMenu
+  FiArrowUp, FiArrowDown, FiDollarSign, FiPieChart, FiCalendar,
+  FiPlus, FiFilter, FiTrendingUp, FiTrendingDown, FiCreditCard, FiPocket,
+  FiHome, FiShoppingBag, FiCoffee, FiSettings, FiBell, FiUser,
+  FiBarChart2, FiTarget, FiX, FiMenu
 } from 'react-icons/fi';
 
 const FinanceApp = () => {
@@ -34,34 +17,29 @@ const FinanceApp = () => {
   const [isAddGoalModalOpen, setIsAddGoalModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [newTransaction, setNewTransaction] = useState({
-    type: 'expense',
-    category: '',
-    amount: '',
-    description: '',
-    date: new Date().toISOString().split('T')[0]
+    type: 'expense', category: '', amount: '', description: '', date: new Date().toISOString().split('T')[0]
   });
   const [newGoal, setNewGoal] = useState({
-    title: '',
-    targetAmount: '',
-    currentAmount: '',
-    deadline: '',
-    description: ''
+    title: '', targetAmount: '', currentAmount: '', deadline: '', description: ''
   });
 
-  // Fechar sidebar ao redimensionar para telas maiores
+  // --- Persistência no localStorage ---
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setIsSidebarOpen(false);
-      }
-    };
+  const storedTransactions = localStorage.getItem("transactions");
+  const storedGoals = localStorage.getItem("goals");
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Dados de exemplo
-  useEffect(() => {
+  if (storedTransactions) {
+    try {
+      const parsedTransactions = JSON.parse(storedTransactions).map(t => ({
+        ...t,
+        amount: Number(t.amount)  // ← garante que seja número
+      }));
+      setTransactions(parsedTransactions);
+      calculateTotals(parsedTransactions);
+    } catch (error) {
+      console.error("Erro ao carregar transações do localStorage:", error);
+    }
+  } else {
     const sampleTransactions = [
       { id: 1, type: 'income', category: 'Salário', amount: 3500, description: 'Salário mensal', date: '2023-10-05' },
       { id: 2, type: 'expense', category: 'Alimentação', amount: 150, description: 'Supermercado', date: '2023-10-07' },
@@ -69,82 +47,84 @@ const FinanceApp = () => {
       { id: 4, type: 'expense', category: 'Moradia', amount: 1200, description: 'Aluguel', date: '2023-10-01' },
       { id: 5, type: 'income', category: 'Freelance', amount: 800, description: 'Projeto freelance', date: '2023-10-15' },
     ];
+    setTransactions(sampleTransactions);
+    calculateTotals(sampleTransactions);
+  }
 
+  if (storedGoals) {
+    try {
+      const parsedGoals = JSON.parse(storedGoals).map(g => ({
+        ...g,
+        targetAmount: Number(g.targetAmount),
+        currentAmount: Number(g.currentAmount)
+      }));
+      setGoals(parsedGoals);
+    } catch (error) {
+      console.error("Erro ao carregar metas do localStorage:", error);
+    }
+  } else {
     const sampleGoals = [
       { id: 1, title: 'Viagem à Praia', targetAmount: 2000, currentAmount: 1200, deadline: '2023-12-31', description: 'Meta para Dezembro/2023' },
       { id: 2, title: 'Notebook Novo', targetAmount: 3000, currentAmount: 800, deadline: '2024-03-31', description: 'Meta para Março/2024' },
     ];
-
-    setTransactions(sampleTransactions);
     setGoals(sampleGoals);
-    calculateTotals(sampleTransactions);
-  }, []);
+  }
+}, []);
 
-  const calculateTotals = (transactions) => {
-    const totalIncome = transactions
-      .filter(t => t.type === 'income')
-      .reduce((sum, t) => sum + t.amount, 0);
-    
-    const totalExpenses = transactions
-      .filter(t => t.type === 'expense')
-      .reduce((sum, t) => sum + t.amount, 0);
-    
-    setIncome(totalIncome);
-    setExpenses(totalExpenses);
-    setBalance(totalIncome - totalExpenses);
-  };
+
+  // Salvar no localStorage automaticamente
+  useEffect(() => { localStorage.setItem("transactions", JSON.stringify(transactions)); }, [transactions]);
+  useEffect(() => { localStorage.setItem("goals", JSON.stringify(goals)); }, [goals]);
+
+  // Fechar sidebar ao redimensionar
+  useEffect(() => {
+    const handleResize = () => { if (window.innerWidth >= 768) setIsSidebarOpen(false); };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const categories = {
     income: ['Salário', 'Freelance', 'Investimentos', 'Presente', 'Outros'],
     expense: ['Alimentação', 'Transporte', 'Moradia', 'Saúde', 'Lazer', 'Educação', 'Outros']
   };
 
-  const handleAddTransaction = () => {
-    if (!newTransaction.amount || !newTransaction.category) return;
-    
-    const transaction = {
-      id: Date.now(),
-      ...newTransaction,
-      amount: parseFloat(newTransaction.amount)
-    };
-    
-    const updatedTransactions = [transaction, ...transactions];
-    setTransactions(updatedTransactions);
-    calculateTotals(updatedTransactions);
-    
-    setNewTransaction({
-      type: 'expense',
-      category: '',
-      amount: '',
-      description: '',
-      date: new Date().toISOString().split('T')[0]
-    });
-    
-    setIsAddModalOpen(false);
+  const calculateTotals = (transactions) => {
+    const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+    const totalExpenses = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+    setIncome(totalIncome);
+    setExpenses(totalExpenses);
+    setBalance(totalIncome - totalExpenses);
   };
 
-  const handleAddGoal = () => {
-    if (!newGoal.title || !newGoal.targetAmount) return;
-    
-    const goal = {
-      id: Date.now(),
-      ...newGoal,
-      targetAmount: parseFloat(newGoal.targetAmount),
-      currentAmount: parseFloat(newGoal.currentAmount) || 0
-    };
-    
-    setGoals([goal, ...goals]);
-    
-    setNewGoal({
-      title: '',
-      targetAmount: '',
-      currentAmount: '',
-      deadline: '',
-      description: ''
-    });
-    
-    setIsAddGoalModalOpen(false);
+  const handleAddTransaction = () => {
+  if (!newTransaction.amount || !newTransaction.category) return;
+
+  const transaction = {
+    id: Date.now(),
+    ...newTransaction,
+    amount: Number(newTransaction.amount)
   };
+
+  const updatedTransactions = [transaction, ...transactions];
+  setTransactions(updatedTransactions);
+  calculateTotals(updatedTransactions);
+  setIsAddModalOpen(false);
+};
+
+const handleAddGoal = () => {
+  if (!newGoal.title || !newGoal.targetAmount) return;
+
+  const goal = {
+    id: Date.now(),
+    ...newGoal,
+    targetAmount: Number(newGoal.targetAmount),
+    currentAmount: Number(newGoal.currentAmount) || 0
+  };
+
+  setGoals([goal, ...goals]);
+  setIsAddGoalModalOpen(false);
+};
+
 
   const getCategoryIcon = (category) => {
     switch (category) {
